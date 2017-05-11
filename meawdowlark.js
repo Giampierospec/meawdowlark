@@ -1,14 +1,7 @@
 var express = require("express");
-
+var fortune = require("./lib/fortune");
 var app = express();
-//Array to be rendered
-var fortunes = [
-        "Conquer your fears or they will conquer you.",
-        "Rivers need springs.",
-        "Do not fear what you don't know.",
-        "You will have a pleasant surprise.",
-        "Whenever possible, keep it simple."
-];
+
 //Uses express-handlebars
 var handlebars = require("express-handlebars");
 //sets the default layout
@@ -27,8 +20,7 @@ app.get("/", function(req, res){
 });
 //Redirects to the about page
 app.get("/about", function(req, res){
-    var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-    res.render("about",{fortune:randomFortune});
+    res.render("about",{fortune: fortune.getFortune});
 });
 //404 catch-all handler(middleware)
 app.use(function(req, res){
