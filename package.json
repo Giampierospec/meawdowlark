@@ -1,0 +1,19 @@
+{
+  "name": "meadowlark",
+  "version": "1.0.0",
+  "description": "here i will develop my project",
+  "main": "meawdowlark.js",
+  "scripts": {
+    "start": "node meawdowlark.js"
+  },
+  "keywords": [
+    "meawdow",
+    "oreilly"
+  ],
+  "author": "Giampiero",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0"
+  }
+}
