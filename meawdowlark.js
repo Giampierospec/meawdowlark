@@ -22,6 +22,25 @@ var hbs = handlebars.create({
     }
 
 });
+//jquery upload
+var jqupload = require("jquery-file-upload-middleware");
+
+app.use('/upload', function (req, res, next) {
+    var now = Date.now();
+    jqupload.fileHandler({
+        uploadDir: function () {
+            return __dirname + '/public/uploads/' + now;
+        },
+        uploadUrl: function () {
+            return '/uploads/' + now;
+        },
+    })(req, res, next);
+});
+//Requiring the body parser in order to retrieve info from the form
+var bodyParser = require("body-parser");
+
+//Requiring formidable to get going with uploading files
+var formidable = require("formidable");
 
 //we use an engine
 app.engine("hbs", hbs.engine);
@@ -46,6 +65,9 @@ app.use(function (req, res, next) {
     res.locals.showTests = app.get("env") !== "production" && req.query.test === "1";
     next();
 });
+
+//using body-parser
+app.use(bodyParser());
 app.get("/", function (req, res) {
     res.render("home");
 });
@@ -75,7 +97,43 @@ app.get('/data/nursery-rhyme', function (req, res) {
         noun: 'heck',
     });
 });
+//Route for the newsletter to send emails
+app.get("/newsletter", function (req, res) {
+    //we will learn about CSRF later... for now, we just
+    // provide a dummy value
+    res.render("newsletter", {
+        csrf: "CSRF token goes here"
+    });
 
+});
+//getting contest photo
+app.get("/contest/vacation-photo", function (req, res) {
+    var now = new Date();
+    res.render("contest/vacation-photo", {
+        year: now.getFullYear(),
+        month: now.getMonth()
+    });
+});
+//posting files contest-vacation
+app.post("/contest/vacation-photo/:year/:month", function (req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        if (err) return res.redirect(303, '/error');
+        console.log('received fields:');
+        console.log(fields);
+        console.log('received files:');
+        console.log(files);
+        res.redirect(303, '/thank-you');
+    });
+});
+//posting to process
+app.post("/process", function (req, res) {
+    console.log("Form (from querystring): " + req.query.form);
+    console.log("CSRF token(from hidden form field): " + req.body._csrf);
+    console.log("Name (from visible form field): " + req.body.name);
+    console.log("Email(from visible form field): " + req.body.email);
+    res.redirect(303, "/thank-you");
+});
 
 //404 catch-all handler(middleware)
 app.use(function (req, res) {
