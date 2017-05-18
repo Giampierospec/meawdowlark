@@ -18,7 +18,7 @@ suite("Cross-Page Tests", function () {
                 });
             });
         });
-
+//testing some things
     test('requesting a group rate from the oregon coast tour page should ' +
         'populate the referrer field',
         function (done) {
