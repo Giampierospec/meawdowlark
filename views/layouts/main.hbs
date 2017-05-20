@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Meadowlark Travel</title>
     {{#if showTests}}
-    <link rel="stylesheet" href="/vendor/mocha.css"> 
-    {{/if}}
+    <link rel="stylesheet" href="/vendor/mocha.css"> {{/if}}
     <link rel="stylesheet" href="/libr/bootstrap/dist/css/bootstrap.min.css">
     <script src="/libr/jquery/dist/jquery.min.js"></script>
     <script src="/libr/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -17,6 +16,12 @@
 
 <body>
     <header><img src="/img/logo.png" alt="Meawdowlark Travel Logo"></header>
+    {{#if flash}}
+    <div class="alert alert-dismissible alert-{{flash.type}}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;<button>
+<strong>{{flash.intro}}</strong> {{{flash.message}}}
+</div>
+{{/if}}
     <!-- Renders the body -->
     {{{body}}} {{#if showTests}}
     <div id="mocha"></div>
