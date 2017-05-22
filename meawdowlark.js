@@ -1,5 +1,6 @@
 var express = require("express");
 var fortune = require("./lib/fortune");
+var connect = require("connect");
 var app = express();
 //importing credentials object
 var credentials = require("./credentials");
@@ -8,6 +9,7 @@ var weatherData = require("./lib/weather");
 
 //Uses express-handlebars
 var handlebars = require("express-handlebars");
+
 //sets the default layout
 var hbs = handlebars.create({
     extname: ".hbs",
@@ -62,6 +64,9 @@ app.use(function (req, res, next) {
     res.locals.partials.weatherData = weatherData.getWeatherData();
     next();
 });
+var emailService = require('./lib/email.js')(credentials);
+emailService.send('joecustomer@gmail.com', 'Hood River tours on sale today!',
+    'Get \'em while they\'re hot!');
 //Adding tests
 app.use(function (req, res, next) {
     res.locals.showTests = app.get("env") !== "production" && req.query.test === "1";
@@ -74,6 +79,11 @@ app.use(bodyParser());
 //using cookie - parser
 app.use(require("cookie-parser")(credentials.cookieSecret));
 app.use(require("express-session")());
+//waiver
+app.use(require("./lib/tourRequiresWaiver.js")());
+var cartValidation = require('./lib/cartValidation.js');
+app.use(cartValidation.checkWaivers);
+app.use(cartValidation.checkGuestCounts);
 app.get("/", function (req, res) {
     res.render("home");
 });
@@ -189,8 +199,42 @@ app.post('/newsletter', function (req, res) {
         };
         return res.redirect(303, '/newsletter/archive');
     });
-})
+});
 
+app.post('/cart/checkout', function (req, res) {
+    var cart = req.session.cart;
+    if (!cart) next(new Error('Cart does not exist.'));
+    var name = req.body.name || '',
+        email = req.body.email || '';
+    // input validation
+    if (!email.match(VALID_EMAIL_REGEX))
+        return res.next(new Error('Invalid email address.'));
+    // assign a random cart ID; normally we would use a database ID here
+    cart.number = Math.random().toString().replace(/^0\.0*/, '');
+    cart.billing = {
+        name: name,
+        email: email,
+    };
+    res.render('email/cart-thank-you', {
+        layout: null,
+        cart: cart
+    }, function (err, html) {
+        if (err) console.log('error in email template');
+        mailTransport.sendMail({
+            from: '"Meadowlark Travel": info@meadowlarktravel.com',
+            to: cart.billing.email,
+            subject: 'Thank You for Book your Trip with Meadowlark',
+            html: html,
+            generateTextFromHtml: true
+        }, function (err) {
+            if (err) console.error('Unable to send confirmation: ' +
+                err.stack);
+        });
+    });
+    res.render('cart-thank-you', {
+        cart: cart
+    });
+});
 //404 catch-all handler(middleware)
 app.use(function (req, res) {
     res.status(404);
