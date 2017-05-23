@@ -1,35 +1,38 @@
 {
-  "name": "meadowlark",
-  "version": "1.0.0",
-  "description": "here i will develop my project",
-  "main": "meawdowlark.js",
+  "name": "meadowlarktravel",
+  "version": "0.0.0",
+  "description": "Sample website for Web Development with Node and Express (O'Reilly).",
+  "main": "meadowlark.js",
   "scripts": {
-    "start": "node meawdowlark.js"
+    "start":"node meadowlark.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "meawdow",
-    "oreilly"
-  ],
-  "author": "Giampiero",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EthanRBrown/web-development-with-node-and-express.git"
+  },
+  "author": "Ethan Brown <e@zepln.com>",
+  "license": "GPL, MIT",
+  "bugs": {
+    "url": "https://github.com/EthanRBrown/web-development-with-node-and-express/issues"
+  },
+  "homepage": "https://github.com/EthanRBrown/web-development-with-node-and-express",
   "dependencies": {
     "body-parser": "1.17.2",
-    "connect": "3.6.2",
+    "chai": "3.5.0",
     "cookie-parser": "1.4.3",
-    "express": "^4.15.2",
-    "express-handlebars": "^3.0.0",
+    "express": "4.15.3",
+    "express-handlebars": "3.0.0",
     "express-session": "1.15.3",
     "formidable": "1.1.1",
-    "jquery-file-upload-middleware": "0.1.8",
     "nodemailer": "4.0.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "grunt": "^1.0.1",
-    "grunt-cafe-mocha": "^0.1.13",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-exec": "^2.0.0",
-    "mocha": "^3.3.0",
-    "zombie": "^5.0.5"
+    "grunt": "1.0.1",
+    "grunt-cafe-mocha": "0.1.13",
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-exec": "2.0.0",
+    "mocha": "3.4.1",
+    "zombie": "5.0.5"
   }
 }
